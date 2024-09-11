@@ -1,20 +1,21 @@
-<!---
-
-This file is used to generate your project datasheet. Please fill in the information below and delete any unused
-sections.
-
-You can also include images in this folder and reference them in the markdown. Each image must be less than
-512 kb in size, and the combined size of all images must be less than 1 MB.
--->
-
 ## How it works
 
-Explain how your project works
+Displays a test pattern on the screen resembling NTSC color bars.
+Optionally, you can add a station ID, make the ID scroll, and make the color bars scroll.
+
+The colors displayed are NOT accurate to actual NTSC color bars.
+This cannot be used to adjust NTSC video equipment; it's just for fun.
+
+![Color bars with station ID](colorbars.png)
 
 ## How to test
 
-Explain how to use your project
+Connect to a VGA monitor. Set the following inputs to configure the design:
+- `show_id` (`ui_in[0]`) to add a station ID,
+- `custom_id` (`ui_in[1]`) to use a custom ID (address on `uio_out`, data on `ui_in[7:4]`),
+- `scroll_id` (`ui_in[2]`) to make the ID scroll,
+- `scroll_bars` (`ui_in[3]`) to make the color bars scroll.
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+[TinyVGA PMOD](https://github.com/mole99/tiny-vga)
