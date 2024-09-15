@@ -25,19 +25,19 @@ parameter X_16_21 = 489;
 parameter X_17_21 = 519;
 parameter X_18_21 = 550;
 
-parameter WHITE      = 6'b101010;
-parameter YELLOW     = 6'b101000;
-parameter CYAN       = 6'b001010;
-parameter GREEN      = 6'b001000;
-parameter MAGENTA    = 6'b100010;
-parameter RED        = 6'b100000;
-parameter BLUE       = 6'b000010;
-parameter I          = 6'b000001;
-parameter SUPERWHITE = 6'b111111;
-parameter Q          = 6'b010010;
-parameter BLACK      = 6'b000000;
-parameter SUPERBLACK = 6'b000000;
-parameter PLUGE      = 6'b000000;
+parameter SUPERBLACK = 4'd1;
+parameter BLACK      = 4'd2;
+parameter PLUGE      = 4'd3;
+parameter I          = 4'd4;
+parameter Q          = 4'd6;
+parameter BLUE       = 4'd8;
+parameter RED        = 4'd9;
+parameter MAGENTA    = 4'd10;
+parameter GREEN      = 4'd11;
+parameter CYAN       = 4'd12;
+parameter YELLOW     = 4'd13;
+parameter WHITE      = 4'd14;
+parameter SUPERWHITE = 4'd15;
 
 module tt_um_rebeccargb_colorbars (
     input  wire [7:0] ui_in,    // Dedicated inputs
@@ -86,7 +86,7 @@ module tt_um_rebeccargb_colorbars (
 
   wire [9:0] bar_x = (ui_in[3] ? ((pix_x + (640 - counter)) % 640) : pix_x);
 
-  wire [5:0] bar_color = (
+  wire [3:0] bar_color = (
     bar_x < X_1_7 ? WHITE :
     bar_x < X_2_7 ? YELLOW :
     bar_x < X_3_7 ? CYAN :
@@ -102,9 +102,9 @@ module tt_um_rebeccargb_colorbars (
   wire id_ui_in = ui_in[4 + id_x[1:0]];
   wire id_rom_in = rom_in[3 - id_x[1:0]];
   wire id_pixel = ui_in[1] ? id_ui_in : id_rom_in;
-  wire [5:0] id_color = id_pixel ? WHITE : BLACK;
+  wire [3:0] id_color = id_pixel ? WHITE : BLACK;
 
-  wire [5:0] alt_color = (
+  wire [3:0] cas_color = (
     bar_x < X_1_7 ? BLUE :
     bar_x < X_2_7 ? BLACK :
     bar_x < X_3_7 ? MAGENTA :
@@ -114,7 +114,7 @@ module tt_um_rebeccargb_colorbars (
     WHITE
   );
 
-  wire [5:0] bot_color = (
+  wire [3:0] bot_color = (
     pix_x < X_05_28 ? I :
     pix_x < X_10_28 ? SUPERWHITE :
     pix_x < X_15_28 ? Q :
@@ -125,13 +125,16 @@ module tt_um_rebeccargb_colorbars (
     BLACK
   );
 
-  wire [5:0] color = (
+  wire [3:0] color_index = (
     pix_y < Y_5_12 ? bar_color :
     (pix_y < Y_7_12 && ui_in[0]) ? id_color :
     pix_y < Y_8_12 ? bar_color :
-    pix_y < Y_9_12 ? alt_color :
+    pix_y < Y_9_12 ? cas_color :
     bot_color
   );
+
+  wire [5:0] color;
+  palette pal(color_index, color);
 
   assign R = video_active ? color[5:4] : 2'b00;
   assign G = video_active ? color[3:2] : 2'b00;
