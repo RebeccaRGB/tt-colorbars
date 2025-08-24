@@ -140,7 +140,7 @@ module tt_um_rebeccargb_colorbars (
   assign G = video_active ? color[3:2] : 2'b00;
   assign B = video_active ? color[1:0] : 2'b00;
 
-  always @(posedge vsync) begin
+  always @(posedge vsync, negedge rst_n) begin
     if (~rst_n) begin
       counter <= 0;
     end else begin
