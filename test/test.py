@@ -106,14 +106,17 @@ async def test_project(dut):
     frame.save(f"output/frame0.png")
 
     dut.ui_in.value = 1
+    await skip_frame(1)
     frame = await capture_frame(1)
     frame.save(f"output/frame1.png")
 
     dut.ui_in.value = 3
+    await skip_frame(2)
     frame = await capture_frame(2)
     frame.save(f"output/frame2.png")
 
     dut.ui_in.value = 0xA3
+    await skip_frame(3)
     frame = await capture_frame(3)
     frame.save(f"output/frame3.png")
 
